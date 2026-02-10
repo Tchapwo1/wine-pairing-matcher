@@ -32,106 +32,95 @@ const getAIPairings = async (query) => {
   }
 };
 
-const app = document.getElementById('app');
 const settingsModal = document.getElementById('settingsModal');
 const apiKeyInput = document.getElementById('apiKeyInput');
 
-// Settings Modal Logic
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('settingsBtn').addEventListener('click', () => {
-    apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
-    settingsModal.style.display = 'flex';
-  });
+// Settings Modal Logic & Event Listeners
+const attachEventListeners = () => {
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (settingsBtn) {
+    settingsBtn.addEventListener('click', () => {
+      apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+      settingsModal.classList.remove('hidden');
+      settingsModal.classList.add('flex');
+    });
+  }
 
-  document.getElementById('closeSettings').addEventListener('click', () => {
-    settingsModal.style.display = 'none';
-  });
+  const closeSettingsBtn = document.getElementById('closeSettings');
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+      settingsModal.classList.remove('flex');
+    });
+  }
 
-  document.getElementById('saveApiKey').addEventListener('click', () => {
-    const key = apiKeyInput.value.trim();
-    if (key) {
-      localStorage.setItem('gemini_api_key', key);
-      initAI();
-      settingsModal.style.display = 'none';
-      alert('API Key saved! Sommelier Mode active.');
-    } else {
-      alert('Please enter a valid API Key.');
-    }
-  });
-});
-
-
-const renderHeader = () => {
-  return `
-    <header>
-      <h1>Sommelier</h1>
-      <p class="subtitle">Discover the perfect pairing for your palate.</p>
-      <button id="settingsBtn" class="settings-button" title="Settings">⚙️</button>
-    </header>
-  `;
-};
-
-const renderSearch = () => {
-  return `
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Search for food (e.g., Steak) or wine (e.g., Merlot)..." />
-    </div>
-  `;
+  const saveApiKeyBtn = document.getElementById('saveApiKey');
+  if (saveApiKeyBtn) {
+    saveApiKeyBtn.addEventListener('click', () => {
+      const key = apiKeyInput.value.trim();
+      if (key) {
+        localStorage.setItem('gemini_api_key', key);
+        initAI();
+        settingsModal.classList.add('hidden');
+        settingsModal.classList.remove('flex');
+        alert('API Key saved! Sommelier Mode active.');
+      } else {
+        alert('Please enter a valid API Key.');
+      }
+    });
+  }
 };
 
 const renderResults = (results, isAI = false) => {
   if (results.length === 0) {
     return `
-      <div style="text-align: center; margin-top: 2rem;">
-        <p style="color: #666; font-style: italic; margin-bottom: 2rem;">No local pairings found for this specific item.</p>
-        <button id="askAI" style="padding: 1rem 2rem; background: linear-gradient(45deg, #e74c3c, #8e44ad); color: white; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); transition: transform 0.2s;">
-          ✨ Ask AI Sommelier
+      <div class="flex flex-col items-center justify-center py-10 text-center animate-fade-in-up">
+        <span class="text-4xl mb-4">🥂</span>
+        <p class="text-gray-400 font-light mb-6">No direct matches found in our cellar.</p>
+        <button id="askAI" class="flex items-center space-x-2 bg-gradient-to-r from-primary to-rose-600 text-white px-6 py-3 rounded-full shadow-lg shadow-primary/30 hover:scale-105 transition-transform">
+          <span class="material-icons-round text-sm">auto_awesome</span>
+          <span>Ask AI Sommelier</span>
         </button>
-        <p id="aiStatus" style="color: #bdc3c7; margin-top: 1rem; min-height: 1.5rem;"></p>
+        <p id="aiStatus" class="text-gray-500 text-sm mt-4 min-h-[1.5rem]"></p>
       </div>
     `;
   }
 
-  return `
-    <div class="results-container">
-      ${results.map(item => `
-        <div class="card" ${isAI ? 'style="border: 1px solid #8e44ad;"' : ''}>
-          <div class="card-header">
-            <span class="tag ${item.type}" ${isAI ? 'style="background-color: rgba(142, 68, 173, 0.2); color: #9b59b6;"' : ''}>
-              ${isAI ? 'AI Selection' : (item.type === 'wine' ? 'Wine' : (item.restaurant || 'Food'))}
+  return results.map((item, index) => `
+    <div class="relative bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-sm hover:border-primary/30 transition-all duration-300 animate-fade-in-up" style="animation-delay: ${index * 50}ms" ${isAI ? 'style="border-color: #8e44ad;"' : ''}>
+      <div class="flex justify-between items-start mb-2">
+        <div class="flex space-x-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.type === 'wine' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'}">
+                ${isAI ? 'AI Selection' : (item.type === 'wine' ? 'Wine' : 'Food')}
             </span>
-            ${item.restaurant ? `<span class="course-tag">${item.course}</span>` : ''}
-          </div>
-          <h3>${item.name}</h3>
-          <p class="matches"><strong>Pair with:</strong> ${item.matches ? item.matches.join(', ') : ''}</p>
-          <p>${item.description}</p>
+            ${item.course ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 capitalize">${item.course}</span>` : ''}
         </div>
-      `).join('')}
+        ${item.restaurant ? `<span class="text-xs text-gray-400 font-mono">${item.restaurant}</span>` : ''}
+      </div>
+      
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2 tracking-wide">${item.name}</h3>
+      
+      <div class="mb-3">
+        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider text-[10px] mb-1">Best Pairing</p>
+        <p class="text-primary font-medium">${item.matches ? item.matches.join(', ') : 'Various options'}</p>
+      </div>
+      
+      <p class="text-sm text-gray-600 dark:text-gray-300 font-light leading-relaxed">${item.description}</p>
     </div>
-  `;
+  `).join('');
 };
 
 const init = () => {
   initAI();
-  app.innerHTML = `
-    ${renderHeader()}
-    ${renderSearch()}
-    <div id="results"></div>
-  `;
-
-  // Re-attach settings listeners after innerHTML wipe
-  const settingsBtn = document.getElementById('settingsBtn');
-  if (settingsBtn) {
-    settingsBtn.addEventListener('click', () => {
-      apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
-      settingsModal.style.display = 'flex';
-    });
-  }
+  attachEventListeners(); // Initial settings listeners
 
   const searchInput = document.getElementById('searchInput');
-  const resultsContainer = document.getElementById('results');
+  const resultsContainer = document.getElementById('resultsContainer');
+  const initialContent = document.getElementById('initialContent');
+  const resultsTitle = document.getElementById('resultsTitle');
+  const mainContent = document.getElementById('mainContent');
 
-  /* Filter Logic */
+  // Filter Logic
   let currentFilter = 'all';
 
   const filterData = (query) => {
@@ -161,62 +150,102 @@ const init = () => {
     return filtered;
   };
 
-  const updateResults = (data, isAI = false) => {
-    resultsContainer.innerHTML = renderResults(data, isAI);
+  const updateResults = (data, isAI = false, query = '') => {
+    // Determine visibility of initial content
+    if (query || currentFilter !== 'all' || isAI) {
+      if (initialContent) initialContent.classList.add('hidden');
+      if (resultsTitle) resultsTitle.innerHTML = isAI ? `AI <span class="font-medium text-primary">Suggestions</span>` : `Found <span class="font-medium text-primary">${data.length} Results</span>`;
+      resultsContainer.innerHTML = renderResults(data, isAI);
+    } else {
+      if (initialContent) initialContent.classList.remove('hidden');
+      if (resultsTitle) resultsTitle.innerHTML = `Explore by <span class="font-medium text-primary">Region</span>`;
+      resultsContainer.innerHTML = '';
+      if (initialContent && !resultsContainer.contains(initialContent)) {
+        // If initialContent was removed from resultsContainer logic (it's separate in HTML), this is fine.
+        // In the HTML structure provided, initialContent is INSIDE resultsContainer.
+        // But my logic clears resultsContainer.innerHTML. 
+        // Correction: The provided HTML has initialContent INSIDE resultsContainer.
+        // So clearing innerHTML removes it. We need to re-append it or toggle visibility properly.
+        // Actually, looking at the HTML, initialContent is a child of resultsContainer.
+        // If I clear resultsContainer, I lose initialContent reference if I didn't save it?
+        // No, `const initialContent = ...` saves the reference.
+        resultsContainer.appendChild(initialContent);
+        initialContent.classList.remove('hidden');
+      }
+    }
 
     // Attach listener for AI button if it exists
     const askAIButton = document.getElementById('askAI');
     if (askAIButton) {
       askAIButton.addEventListener('click', async () => {
         if (!model) {
-          alert('Please set your Gemini API Key in Settings (⚙️) first!');
+          settingsModal.classList.remove('hidden');
+          settingsModal.classList.add('flex');
+          alert('Please set your Gemini API Key in Settings first!');
           return;
         }
 
         const aiStatus = document.getElementById('aiStatus');
-        const query = searchInput.value;
 
         aiStatus.textContent = `Consulting the virtual cellar for "${query}"...`;
         askAIButton.disabled = true;
-        askAIButton.style.opacity = '0.7';
+        askAIButton.classList.add('opacity-70', 'cursor-not-allowed');
 
         const aiResults = await getAIPairings(query);
 
         if (aiResults && aiResults.length > 0) {
-          updateResults(aiResults, true);
+          updateResults(aiResults, true, query);
         } else {
           aiStatus.textContent = "The sommelier is stumped. Please check your API key or try again.";
           askAIButton.disabled = false;
-          askAIButton.style.opacity = '1';
+          askAIButton.classList.remove('opacity-70', 'cursor-not-allowed');
         }
       });
     }
   };
 
-  // Initial render
-  updateResults(pairingsData);
-
   // Search Listener
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.toLowerCase();
     const filtered = filterData(query);
-    updateResults(filtered);
+    updateResults(filtered, false, query);
   });
 
-  // Filter Chip Listeners
+  // Filter Chip Listeners (Update Logic for Tailwind classes)
   document.querySelectorAll('.filter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      // Update UI
-      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
+    chip.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent default
+
+      const filterValue = chip.getAttribute('data-filter');
+
+      // Handle Region Cards (French/Italian etc) acting as filters/search triggers
+      if (['french', 'italian', 'spanish'].includes(filterValue)) {
+        // These acts as search shortcuts
+        searchInput.value = filterValue;
+        searchInput.dispatchEvent(new Event('input'));
+        return;
+      }
+
+      // Standard Filter Chips Logic
+      // UI Updates: Remove active styles from all buttons
+      document.querySelectorAll('.filter-container .filter-chip').forEach(c => {
+        c.classList.remove('bg-primary', 'text-white', 'active', 'shadow-lg', 'shadow-primary/20');
+        c.classList.add('bg-white', 'dark:bg-white/5', 'text-gray-600', 'dark:text-gray-300');
+      });
+
+      // Apply Active Style to clicked button
+      if (chip.classList.contains('filter-chip') && chip.parentElement.classList.contains('filter-container')) {
+        chip.classList.remove('bg-white', 'dark:bg-white/5', 'text-gray-600', 'dark:text-gray-300');
+        chip.classList.add('bg-primary', 'text-white', 'active', 'shadow-lg', 'shadow-primary/20');
+      }
 
       // Update State
-      currentFilter = chip.getAttribute('data-filter');
+      currentFilter = filterValue;
 
       // Re-render
       const query = searchInput.value.toLowerCase();
       const filtered = filterData(query);
-      updateResults(filtered);
+      updateResults(filtered, false, query);
     });
   });
 };

@@ -1,34 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sommelier | Wine Pairing Matcher</title>
-  <link rel="stylesheet" href="./src/style.css" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Cuisine Selection Home - Wine Pairing App</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#d41132",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221013",
+          },
+          fontFamily: {
+            "display": ["Work Sans", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Custom scrollbar hiding for horizontal scroll areas */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+    /* Animation for results */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+  </style>
 </head>
 
-<body>
-  <button id="settingsBtn" aria-label="Settings"
-    style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">⚙️</button>
+<body
+  class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100 font-display min-h-screen flex justify-center">
+  <!-- Mobile Container -->
+  <div
+    class="w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+    <!-- Header -->
+    <header
+      class="px-6 pt-12 pb-4 flex justify-between items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm sticky top-0 z-20">
+      <div class="flex flex-col">
+        <span class="text-xs uppercase tracking-[0.2em] text-primary font-bold mb-1">Sommelier AI</span>
+        <h1 class="text-2xl font-light tracking-wide text-gray-900 dark:text-white">Good evening, <span
+            class="font-medium">Guest</span></h1>
+      </div>
+      <button id="settingsBtn" class="relative group" title="Settings">
+        <div
+          class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden border-2 border-primary/20 flex items-center justify-center">
+          <span class="material-icons-round text-gray-400">auth_user</span>
+        </div>
+        <div
+          class="absolute bottom-0 right-0 w-3 h-3 bg-primary rounded-full border-2 border-white dark:border-background-dark">
+        </div>
+      </button>
+    </header>
 
-  <div id="app"></div>
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto pb-24 px-6 no-scrollbar" id="mainContent">
+      <!-- Search Section -->
+      <div class="mt-2 mb-6">
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span
+              class="material-icons-round text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+          </div>
+          <input id="searchInput"
+            class="block w-full pl-11 pr-4 py-4 rounded-xl bg-white dark:bg-white/5 border-none focus:ring-2 focus:ring-primary/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 shadow-sm transition-all"
+            placeholder="What are you eating tonight?" type="text" />
+        </div>
+      </div>
+      <!-- Filter Chips -->
+      <div class="mb-8">
+        <div class="flex space-x-3 overflow-x-auto no-scrollbar pb-2 filter-container">
+          <button
+            class="filter-chip active flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap shadow-lg shadow-primary/20"
+            data-filter="all">
+            <span class="material-icons-round text-sm">restaurant</span>
+            <span class="text-sm font-medium">All</span>
+          </button>
+          <button
+            class="filter-chip flex items-center space-x-2 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full whitespace-nowrap hover:border-primary/50 transition-colors"
+            data-filter="wine">
+            <span class="text-lg">🍷</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Wine</span>
+          </button>
+          <button
+            class="filter-chip flex items-center space-x-2 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full whitespace-nowrap hover:border-primary/50 transition-colors"
+            data-filter="food">
+            <span class="text-lg">🍽️</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Food</span>
+          </button>
+          <button
+            class="filter-chip flex items-center space-x-2 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full whitespace-nowrap hover:border-primary/50 transition-colors"
+            data-filter="starter">
+            <span class="text-lg">🥗</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Starters</span>
+          </button>
+          <button
+            class="filter-chip flex items-center space-x-2 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full whitespace-nowrap hover:border-primary/50 transition-colors"
+            data-filter="main">
+            <span class="text-lg">🥩</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Mains</span>
+          </button>
+          <button
+            class="filter-chip flex items-center space-x-2 px-4 py-2 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full whitespace-nowrap hover:border-primary/50 transition-colors"
+            data-filter="dessert">
+            <span class="text-lg">🍰</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Desserts</span>
+          </button>
+        </div>
+      </div>
+      <!-- Cuisine Grid Section / Results -->
+      <div class="mb-8">
+        <div class="flex justify-between items-end mb-5">
+          <h2 class="text-xl font-light tracking-wide text-gray-900 dark:text-white" id="resultsTitle">Explore by <span
+              class="font-medium text-primary">Region</span></h2>
+        </div>
+        <div id="resultsContainer" class="grid grid-cols-1 gap-4">
+          <!-- Results will be injected here -->
+          <!-- Initial content: Cuisine Cards -->
+          <div class="grid grid-cols-2 gap-4 col-span-1" id="initialContent">
+            <!-- French Card (Larger) -->
+            <div class="col-span-2 relative h-48 rounded-xl overflow-hidden group cursor-pointer filter-chip"
+              data-filter="french"
+              onclick="document.getElementById('searchInput').value='French'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+              <img alt="Elegant french dinner table setting with wine"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9ZXqxq1SMCLAJF75yj1s9UzOS-_mTXmvGwoY-RM9hxDkrQABsP34edM_FfKMd35ZqXpE7YYTbxw4P6hnrN7rf5ZNQTrGKZOexC_wMxM7AgTAmtPhQvTUEycZRyPmhkyoJIXehtTP9W5CRuDYb2HBRC9rXReKDA3aU92ShTxFKjGHFUaogSFiL8Ab7g-w9bqPCaVvBJFmO5Rb1-K385maTOm_7UUjmKEMte4KLv5dKiwNWVsM4X8l8Axm0ep4Mmfrym5VBuM__oi8" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+              <div class="absolute bottom-4 left-4">
+                <span class="text-xs font-bold text-primary uppercase tracking-wider mb-1 block">Most Popular</span>
+                <h3 class="text-2xl font-normal text-white tracking-wide">French Cuisine</h3>
+                <p class="text-gray-300 text-sm font-light mt-1">Coq au vin, Beef Bourguignon...</p>
+              </div>
+            </div>
+            <!-- Italian Card -->
+            <div class="relative h-40 rounded-xl overflow-hidden group cursor-pointer filter-chip" data-filter="italian"
+              onclick="document.getElementById('searchInput').value='Italian'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+              <img alt="Fresh artisan pasta with flour"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhXOZRMwyV6tT1i6CV_j93VSR9-BZgjYCt_wCmI_IcSaoGd5nh3y5xvQz_Ch0MaD5BnH2YLHLTBQMs867CiMqiAKx1-GzoYQCmPXsG2LVQQSd_JqfVJ2k37Pj96jhDImbKwiEM5MZBLgXWrnodc0tQkVw_y_t8cJhgjwugNzjabDGzYxlRYIa7kbkZEibco-fLRZ5VVk83guXV4b5S3QVEQqI-PJfydadPBZa2r95qSuzQ64cDLn_w2LpFEX5tnf7PxzZAvbVu_e4" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 left-3">
+                <h3 class="text-lg font-normal text-white tracking-wide">Italian</h3>
+              </div>
+            </div>
+            <!-- Spanish Card -->
+            <div class="relative h-40 rounded-xl overflow-hidden group cursor-pointer filter-chip" data-filter="spanish"
+              onclick="document.getElementById('searchInput').value='Spanish'; document.getElementById('searchInput').dispatchEvent(new Event('input'));">
+              <img alt="Spanish tapas platter"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0v2gHJI69qTm-JU_KcXWe5wVGxV4Rk2r_1QlcX1cduTlEAZiaMICb4238SEAkq4g-YG_5X_g_UbBQjyxvdAUojLWvjlrLoo8hxDa7qeAJdaH5aFCyosMRpbIc7xp8upSs55U5tap1fSSLZZ-V12rJ2RYn7fQUrsxOd9vnjpOjV7mWsCavlx9ajw1pOSF5JI09WruqdITumMWZCL8BIuYxV9EvoNdNHKgojyCRDielSkv7L8lJ08gylb5_FsgR2WXJp2dc0A5iINk" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <div class="absolute bottom-3 left-3">
+                <h3 class="text-lg font-normal text-white tracking-wide">Spanish</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div id="settingsModal"
-    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
-    <div
-      style="background: #1a1a1a; padding: 2rem; border-radius: 10px; max-width: 400px; width: 90%; border: 1px solid #333;">
-      <h2 style="margin-top: 0; color: #e74c3c;">Sommelier Settings</h2>
-      <p style="color: #ccc; font-size: 0.9rem;">To use AI pairing for unknown dishes, please enter your Google Gemini
-        API Key.</p>
-      <input type="password" id="apiKeyInput" placeholder="Enter API Key"
-        style="width: 100%; padding: 0.5rem; margin: 1rem 0; background: #0d0d0d; border: 1px solid #333; color: #fff; border-radius: 4px;">
-      <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-        <button id="closeSettings"
-          style="padding: 0.5rem 1rem; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+    </main>
+    <!-- Bottom Navigation -->
+    <nav
+      class="fixed bottom-0 w-full max-w-md bg-white/90 dark:bg-[#1a0c0f]/95 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 pb-6 pt-3 px-6 z-30">
+      <div class="flex justify-between items-center">
+        <a class="flex flex-col items-center group cursor-pointer" onclick="window.location.reload()">
+          <span class="material-icons-round text-primary text-2xl mb-1">home</span>
+          <span class="text-[10px] font-medium text-primary tracking-wider">Home</span>
+        </a>
+        <a class="flex flex-col items-center group cursor-pointer">
+          <span
+            class="material-icons-round text-gray-400 group-hover:text-primary transition-colors text-2xl mb-1">favorite_border</span>
+          <span
+            class="text-[10px] font-medium text-gray-500 group-hover:text-primary transition-colors tracking-wider">Saved</span>
+        </a>
+        <div class="relative -top-6">
+          <button
+            class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl shadow-primary/40 hover:scale-105 transition-transform">
+            <span class="material-icons-round text-2xl">qr_code_scanner</span>
+          </button>
+        </div>
+        <a class="flex flex-col items-center group cursor-pointer">
+          <span
+            class="material-icons-round text-gray-400 group-hover:text-primary transition-colors text-2xl mb-1">inventory_2</span>
+          <span
+            class="text-[10px] font-medium text-gray-500 group-hover:text-primary transition-colors tracking-wider">Cellar</span>
+        </a>
+        <a class="flex flex-col items-center group cursor-pointer">
+          <span
+            class="material-icons-round text-gray-400 group-hover:text-primary transition-colors text-2xl mb-1">person_outline</span>
+          <span
+            class="text-[10px] font-medium text-gray-500 group-hover:text-primary transition-colors tracking-wider">Profile</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Settings Modal (Hidden) -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 justify-center items-center backdrop-blur-sm">
+      <div class="bg-background-dark border border-white/10 p-8 rounded-2xl max-w-sm w-[90%] shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-light text-primary tracking-wide">Sommelier Settings</h2>
+          <button id="closeSettings" class="text-gray-400 hover:text-white material-icons-round">close</button>
+        </div>
+        <p class="text-gray-400 text-sm mb-4 font-light leading-relaxed">Enter your Google Gemini API Key to enable AI
+          Sommelier features for unknown dishes.</p>
+        <input type="password" id="apiKeyInput" placeholder="Paste API Key here"
+          class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary/50 focus:border-transparent outline-none mb-6 text-sm" />
         <button id="saveApiKey"
-          style="padding: 0.5rem 1rem; background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Save</button>
+          class="w-full py-3 bg-primary hover:bg-red-700 text-white rounded-xl transition-colors font-medium shadow-lg shadow-primary/30">Save
+          & Enable AI</button>
       </div>
     </div>
   </div>
