@@ -1,0 +1,88 @@
+[
+    {
+        "id": 1,
+        "name": "Cabernet Sauvignon",
+        "type": "wine",
+        "matches": [
+            "Steak",
+            "Lamb",
+            "Hard Cheese"
+        ],
+        "description": "A full-bodied red wine with strong tannins and notes of dark fruit, perfect for rich, fatty meats."
+    },
+    {
+        "id": 2,
+        "name": "Chardonnay",
+        "type": "wine",
+        "matches": [
+            "Lobster",
+            "Chicken",
+            "Creamy Pasta"
+        ],
+        "description": "A popular white wine known for its buttery texture and citrus notes, pairing well with rich seafood and poultry."
+    },
+    {
+        "id": 3,
+        "name": "Pinot Noir",
+        "type": "wine",
+        "matches": [
+            "Salmon",
+            "Duck",
+            "Mushrooms"
+        ],
+        "description": "A light-bodied red wine with red fruit flavors and earthy undertones, versatile enough for fish and game."
+    },
+    {
+        "id": 4,
+        "name": "Sauvignon Blanc",
+        "type": "wine",
+        "matches": [
+            "Goat Cheese",
+            "Oysters",
+            "Asparagus"
+        ],
+        "description": "A high-acid white wine with herbaceous and citrus profiles, excellent with tangy foods and vegetables."
+    },
+    {
+        "id": 5,
+        "name": "Steak",
+        "type": "food",
+        "matches": [
+            "Cabernet Sauvignon",
+            "Malbec",
+            "Syrah"
+        ],
+        "description": "Red meat pairs best with bold red wines that can stand up to the fat and protein structure."
+    },
+    {
+        "id": 6,
+        "name": "Spicy Thai Curry",
+        "type": "food",
+        "matches": [
+            "Riesling",
+            "Gewürztraminer"
+        ],
+        "description": "Spicy dishes need wines with sweetness and low alcohol to balance the heat."
+    },
+    {
+        "id": 7,
+        "name": "Blue Cheese",
+        "type": "food",
+        "matches": [
+            "Port",
+            "Sauternes"
+        ],
+        "description": "Pungent cheeses pair beautifully with sweet dessert wines for a salty-sweet contrast."
+    },
+    {
+        "id": 8,
+        "name": "Dark Chocolate",
+        "type": "food",
+        "matches": [
+            "Zinfandel",
+            "Sherry",
+            "Port"
+        ],
+        "description": "Bitter dark chocolate needs a wine with some sweetness or intense fruit to avoid clashing."
+    }
+]
