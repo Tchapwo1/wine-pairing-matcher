@@ -131,6 +131,36 @@ const init = () => {
   const searchInput = document.getElementById('searchInput');
   const resultsContainer = document.getElementById('results');
 
+  /* Filter Logic */
+  let currentFilter = 'all';
+
+  const filterData = (query) => {
+    let filtered = pairingsData;
+
+    // Apply category filter
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter(item => {
+        if (currentFilter === 'wine') return item.type === 'wine';
+        if (currentFilter === 'food') return item.type === 'food';
+        if (['starter', 'main', 'dessert'].includes(currentFilter)) {
+          return item.course === currentFilter;
+        }
+        return true;
+      });
+    }
+
+    // Apply search query
+    if (query) {
+      filtered = filtered.filter(item =>
+        item.name.toLowerCase().includes(query) ||
+        (item.matches && item.matches.some(match => match.toLowerCase().includes(query))) ||
+        (item.restaurant && item.restaurant.toLowerCase().includes(query))
+      );
+    }
+
+    return filtered;
+  };
+
   const updateResults = (data, isAI = false) => {
     resultsContainer.innerHTML = renderResults(data, isAI);
 
@@ -166,19 +196,28 @@ const init = () => {
   // Initial render
   updateResults(pairingsData);
 
+  // Search Listener
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.toLowerCase();
-    if (!query) {
-      updateResults(pairingsData);
-      return;
-    }
+    const filtered = filterData(query);
+    updateResults(filtered);
+  });
 
-    const filtereddata = pairingsData.filter(item =>
-      item.name.toLowerCase().includes(query) ||
-      (item.matches && item.matches.some(match => match.toLowerCase().includes(query))) ||
-      (item.restaurant && item.restaurant.toLowerCase().includes(query))
-    );
-    updateResults(filtereddata);
+  // Filter Chip Listeners
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      // Update UI
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      // Update State
+      currentFilter = chip.getAttribute('data-filter');
+
+      // Re-render
+      const query = searchInput.value.toLowerCase();
+      const filtered = filterData(query);
+      updateResults(filtered);
+    });
   });
 };
 
