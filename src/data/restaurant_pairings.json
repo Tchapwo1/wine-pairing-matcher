@@ -450,10 +450,9 @@
         "restaurant": "Pique-Nique",
         "course": "dessert",
         "matches": [
-            "Sauternes",
-            "Sweet Muscat"
+            "Demi-sec Champagne"
         ],
-        "description": "A delicate, sweet soufflé needs a wine that matches its sweetness without overpowering it."
+        "description": "A light, effervescent pairing."
     },
     {
         "id": 139,
@@ -562,5 +561,183 @@
             "Champagne"
         ],
         "description": "Shellfish platters require high-acid, saline wines like Muscadet from the Loire Valley."
+    },
+    {
+        "id": 148,
+        "name": "Pâté en croûte",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Sancerre",
+            "Chablis"
+        ],
+        "description": "Avoid tannin: metallic clash."
+    },
+    {
+        "id": 149,
+        "name": "Escargot croquette",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Chenin Blanc sec"
+        ],
+        "description": "Avoid oak."
+    },
+    {
+        "id": 150,
+        "name": "Mackerel",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Albariño"
+        ],
+        "description": "Avoid aromatic whites."
+    },
+    {
+        "id": 151,
+        "name": "Vol-au-vent",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Jura Chardonnay"
+        ],
+        "description": "Avoid high alcohol."
+    },
+    {
+        "id": 152,
+        "name": "Artichoke",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Vermentino"
+        ],
+        "description": "Avoid tannin entirely."
+    },
+    {
+        "id": 153,
+        "name": "Cuttlefish ink",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Etna Bianco"
+        ],
+        "description": "Avoid Sauvignon Blanc."
+    },
+    {
+        "id": 154,
+        "name": "White asparagus",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Grüner Veltliner"
+        ],
+        "description": "Avoid sweetness."
+    },
+    {
+        "id": 155,
+        "name": "Girolles",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "starter",
+        "matches": [
+            "Savagnin"
+        ],
+        "description": "Avoid fruit bombs."
+    },
+    {
+        "id": 156,
+        "name": "Chateaubriand",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "main",
+        "matches": [
+            "Bordeaux Left Bank"
+        ],
+        "description": "Avoid jammy styles."
+    },
+    {
+        "id": 157,
+        "name": "Roast chicken",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "main",
+        "matches": [
+            "Burgundy Blanc"
+        ],
+        "description": "Avoid oak."
+    },
+    {
+        "id": 158,
+        "name": "Bar en croûte",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "main",
+        "matches": [
+            "Muscadet sur lie"
+        ],
+        "description": "Avoid red wine."
+    },
+    {
+        "id": 159,
+        "name": "Lamb shoulder",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "main",
+        "matches": [
+            "Northern Rhône Syrah"
+        ],
+        "description": "Avoid overripe versions."
+    },
+    {
+        "id": 160,
+        "name": "Pigeon pithivier",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "main",
+        "matches": [
+            "Volnay",
+            "Chambolle-Musigny"
+        ],
+        "description": "Avoid heavy extraction."
+    },
+    {
+        "id": 161,
+        "name": "Dulcey chocolate",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "dessert",
+        "matches": [
+            "Banyuls"
+        ],
+        "description": "Rich chocolate needs a fortified wine like Banyuls."
+    },
+    {
+        "id": 162,
+        "name": "Fruit tarts",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "dessert",
+        "matches": [
+            "Moscato d’Asti"
+        ],
+        "description": "Fresh fruit tarts pair beautifully with the floral sweetness of Moscato."
+    },
+    {
+        "id": 163,
+        "name": "Mont Blanc",
+        "type": "food",
+        "restaurant": "Pique-Nique",
+        "course": "dessert",
+        "matches": [
+            "Vin de paille"
+        ],
+        "description": "Light pour."
     }
 ]
