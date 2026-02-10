@@ -71,44 +71,173 @@ const attachEventListeners = () => {
   }
 };
 
-const renderResults = (results, isAI = false) => {
-  if (results.length === 0) {
-    return `
-      <div class="flex flex-col items-center justify-center py-10 text-center animate-fade-in-up">
-        <span class="text-4xl mb-4">🥂</span>
-        <p class="text-gray-400 font-light mb-6">No direct matches found in our cellar.</p>
-        <button id="askAI" class="flex items-center space-x-2 bg-gradient-to-r from-primary to-rose-600 text-white px-6 py-3 rounded-full shadow-lg shadow-primary/30 hover:scale-105 transition-transform">
-          <span class="material-icons-round text-sm">auto_awesome</span>
-          <span>Ask AI Sommelier</span>
-        </button>
-        <p id="aiStatus" class="text-gray-500 text-sm mt-4 min-h-[1.5rem]"></p>
-      </div>
-    `;
-  }
+// ... previous imports and setup ...
 
-  return results.map((item, index) => `
-    <div class="relative bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-sm hover:border-primary/30 transition-all duration-300 animate-fade-in-up" style="animation-delay: ${index * 50}ms" ${isAI ? 'style="border-color: #8e44ad;"' : ''}>
-      <div class="flex justify-between items-start mb-2">
-        <div class="flex space-x-2">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.type === 'wine' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'}">
-                ${isAI ? 'AI Selection' : (item.type === 'wine' ? 'Wine' : 'Food')}
-            </span>
-            ${item.course ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 capitalize">${item.course}</span>` : ''}
+const app = document.getElementById('app');
+// Main content container
+const mainContent = document.getElementById('mainContent');
+
+// ... (keep settings/AI logic as is) ...
+
+const renderDishSelection = (title, dishes) => {
+  // Generate HTML for the dishes list
+  const dishCards = dishes.map(dish => {
+    // Mock image based on cuisine/type if possible, else generic
+    let imgSrc = "https://source.unsplash.com/400x300/?food,dinner";
+    if (title.includes('Italian')) imgSrc = "https://lh3.googleusercontent.com/aida-public/AB6AXuDsqFCvnOcKD9XRXc3DWIxT8B0jBYRImjtkJ_bGKJcLKwRsaRS5-LKM2LObJK1kLkakXEX4Biknv4bntF4riYvuqaaA-CLD_rtnFIUh_OlS-dIbFmJV0IHcYAmXYHN7KOLrR2haLnvuHijBgvxu9IHJvx-wUx63ImOS-V_lDDu_kJe-RCXPHSPfWbd6mn2_JCqsX8OROPCEkdKEcvNpA6H-MmMP8H44Hg5SNqgQVluIj5RgtAlFF36OfjI74JM8Qt9JMFt_MsqSMW8";
+    if (title.includes('French')) imgSrc = "https://lh3.googleusercontent.com/aida-public/AB6AXuCDal-bNFqfqH7H5R6cVtcpwRAyj4evZS2LqVojQEshQeaFqz19013w8jdahfxi-xfmCwhIaceidPD2QQKIzExdbTq0wJMkxdCAZK81G6I9s-3DWYthb-HEmzxA6q17HTE7SX48mbInZA8sDhjp3xgc-T9li11NDg6aiJmWFLIluvDSK6SIljS5hd9xxfOrnAsOMRtXqa2x0dqlDWLOZTcrxbXW33jQuPMxFGdo1pPJlpw1ZHimiiJfALYlmxzaO28o4SBSwywuHpk"; // Osso buco image as placeholder
+
+    // Tags generation
+    const tags = [];
+    if (dish.type === 'wine') tags.push({ text: 'Wine', class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' });
+    if (dish.course) tags.push({ text: dish.course, class: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 capitalize' });
+
+    return `
+        <!-- Card -->
+        <div class="group relative bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:border-primary/30 transition-all">
+            <div class="flex h-32">
+                <div class="w-32 h-full flex-shrink-0 relative overflow-hidden">
+                    <img alt="${dish.name}" class="absolute w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="${imgSrc}" onError="this.src='https://source.unsplash.com/400x300/?food'"/>
+                </div>
+                <div class="flex-1 p-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white leading-tight mb-1">${dish.name}</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">${dish.description}</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex gap-2">
+                            ${tags.map(t => `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${t.class}">${t.text}</span>`).join('')}
+                        </div>
+                        <button class="w-8 h-8 rounded-full bg-background-light dark:bg-background-dark flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                            <span class="material-icons-round text-lg">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        ${item.restaurant ? `<span class="text-xs text-gray-400 font-mono">${item.restaurant}</span>` : ''}
-      </div>
-      
-      <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2 tracking-wide">${item.name}</h3>
-      
-      <div class="mb-3">
-        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider text-[10px] mb-1">Best Pairing</p>
-        <p class="text-primary font-medium">${item.matches ? item.matches.join(', ') : 'Various options'}</p>
-      </div>
-      
-      <p class="text-sm text-gray-600 dark:text-gray-300 font-light leading-relaxed">${item.description}</p>
+        `;
+  }).join('');
+
+  return `
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-6 pt-12 pb-4">
+        <div class="flex items-center justify-between mb-4">
+            <button id="backBtn" class="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-surface-dark transition-colors text-gray-600 dark:text-gray-300">
+                <span class="material-icons-round">chevron_left</span>
+            </button>
+            <div class="flex gap-4">
+                <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-surface-dark transition-colors text-gray-600 dark:text-gray-300">
+                    <span class="material-icons-round">search</span>
+                </button>
+                <button class="p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-surface-dark transition-colors text-gray-600 dark:text-gray-300">
+                    <span class="material-icons-round">tune</span>
+                </button>
+            </div>
+        </div>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">${title}</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Select a dish to pair with the perfect wine.</p>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto pb-24 h-full">
+        <!-- Filters / Preferences -->
+        <div class="px-6 py-6">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Preferences</h3>
+            <div class="flex flex-wrap gap-2">
+                <button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full text-sm font-medium shadow-md shadow-primary/20 transition-transform active:scale-95">
+                    <span class="material-icons-round text-base">check</span>
+                    Prefer Red
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-surface-dark border border-transparent dark:border-gray-800 hover:border-primary/50 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium transition-colors active:scale-95">
+                    Prefer White
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-surface-dark border border-transparent dark:border-gray-800 hover:border-primary/50 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium transition-colors active:scale-95">
+                    Budget-friendly
+                </button>
+            </div>
+        </div>
+        <!-- Dish List -->
+        <div class="px-6 space-y-6">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Suggested Dishes</h2>
+                <span class="text-xs text-primary font-medium">View all</span>
+            </div>
+            ${dishCards}
+        </div>
+        <!-- Bottom Spacer -->
+        <div class="h-10"></div>
+    </main>
+    <!-- Fixed Bottom Nav (Context) -->
+    <div class="absolute bottom-0 w-full bg-white dark:bg-surface-darker/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 p-4 pb-8 z-40">
+        <div class="flex justify-between items-center max-w-sm mx-auto">
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold">Step 2 of 3</span>
+                <span class="text-sm text-gray-900 dark:text-white font-medium">Selecting Dish</span>
+            </div>
+            <div class="flex gap-1 h-1 w-24">
+                <div class="h-full w-1/3 bg-primary rounded-full"></div>
+                <div class="h-full w-1/3 bg-primary rounded-full"></div>
+                <div class="h-full w-1/3 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            </div>
+        </div>
     </div>
-  `).join('');
+    `;
 };
+
+// ... inside init ...
+const updateResults = (data, isAI = false, query = '') => {
+  // If we have a query or filter active, switch to "Results View" (Step 2)
+  if (query || currentFilter !== 'all' || isAI) {
+    // Save current Home state if needed (or just overwrite)
+    // Render Step 2 View
+    const title = isAI ? "AI Suggestions" : (query ? `Results for "${query}"` : "Filtered Selection");
+
+    // Replace EVERYTHING in the mobile container with the new view
+    // We target the parent of <header> and <main> which is the .w-full.max-w-md container
+    // Actually, let's target document.body for simplicity or the specific container ID if we added one
+    // In index.html, the container has classes but no ID. Let's assume we replace the innerHTML of the container.
+    // BUT wait, we need to be able to go BACK.
+
+    // Better approach: Hide Home content, Show Results content.
+    // Since we didn't setup a router, let's just swap HTML for now.
+    const container = document.querySelector('.w-full.max-w-md'); // The main app container
+
+    // Check if we are already in results view to avoid full re-render flickering?
+    // For now, simpler is better.
+
+    // Store Original Home HTML to restore on Back?
+    if (!window.homeHTML) window.homeHTML = container.innerHTML;
+
+    container.innerHTML = renderDishSelection(title, data);
+
+    // Re-attach Back Button Listener
+    document.getElementById('backBtn').addEventListener('click', () => {
+      container.innerHTML = window.homeHTML;
+      // Re-init Home Logic (listeners need to be re-attached!)
+      init();
+    });
+
+  } else {
+    // ... (Default Home View logic) ... 
+    // We shouldn't reach here if we replaced the HTML.
+    // If we are in Home View, this function behaves as before (rendering cards into resultsContainer).
+    // BUT if we want the "Step 2" design for ALL results...
+
+    // Let's keep the Home View for "Browsing" and switch to Step 2 for "Searching/Selecting".
+    if (initialContent) initialContent.classList.remove('hidden');
+    if (resultsTitle) resultsTitle.innerHTML = `Explore by <span class="font-medium text-primary">Region</span>`;
+    resultsContainer.innerHTML = '';
+    if (initialContent && !resultsContainer.contains(initialContent)) {
+      resultsContainer.appendChild(initialContent);
+      initialContent.classList.remove('hidden');
+    }
+  }
+};
+
+// Update: Initial Search Listener needs to trigger the View Switch
+// ...
+
 
 const init = () => {
   initAI();
