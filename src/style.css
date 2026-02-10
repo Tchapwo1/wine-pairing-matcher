@@ -1,7 +1,8 @@
 :root {
   --bg-color: #0d0d0d;
   --text-color: #e0e0e0;
-  --accent-color: #c0392b; /* Deep Red */
+  --accent-color: #c0392b;
+  /* Deep Red */
   --secondary-color: #2c3e50;
   --font-primary: 'Playfair Display', serif;
   --font-secondary: 'Lato', sans-serif;
@@ -32,6 +33,7 @@ h1 {
   font-size: 3rem;
   margin-bottom: 0.5rem;
   background: linear-gradient(45deg, #e74c3c, #c0392b);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: fadeInDown 1s ease-out;
@@ -122,38 +124,91 @@ input[type="text"]:focus {
   line-height: 1.5;
 }
 
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
 .tag {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  background-color: rgba(192, 57, 43, 0.2);
-  color: var(--accent-color);
-  font-size: 0.8rem;
+  background-color: #333;
+  color: #fff;
+  font-size: 0.7rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+.tag.wine {
+  background-color: rgba(192, 57, 43, 0.2);
+  color: #e74c3c;
+}
+
+.tag.food {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.course-tag {
+  font-size: 0.7rem;
+  color: #7f8c8d;
+  font-style: italic;
+  text-transform: capitalize;
+}
+
+.matches {
+  color: #bdc3c7;
+  margin-bottom: 0.5rem;
+}
+
+.matches strong {
+  color: var(--accent-color);
+}
+
+
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0d0d0d;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
